@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Tests;
 using Microsoft.DotNet.RemoteExecutor;
 using Xunit;
@@ -614,7 +615,7 @@ namespace System.Text.RegularExpressions.Tests
         public void Match_Timeout_Repetition_Throws(RegexOptions options)
         {
             int repetitionCount = 800_000_000;
-            var regex = new Regex(@"a\s{" + repetitionCount+ "}", options, TimeSpan.FromSeconds(1));
+            var regex = new Regex(@"a\s{" + repetitionCount + "}", options, TimeSpan.FromSeconds(1));
             string input = @"a" + new string(' ', repetitionCount) + @"b";
             Assert.Throws<RegexMatchTimeoutException>(() => regex.Match(input));
         }
@@ -1174,6 +1175,17 @@ namespace System.Text.RegularExpressions.Tests
             Assert.Equal("abc", m2.Value);
 
             AssertExtensions.Throws<ArgumentNullException>("inner", () => System.Text.RegularExpressions.Match.Synchronized(null));
+        }
+
+        [SkipOnTargetFramework(TargetFrameworkMonikers.NetFramework)]
+        [Fact]
+        public void Test()
+        {
+            // Create a unit test driver here to write the generated assembly to disk so we can look at it in ILSpy
+            Regex.CompileToAssembly(new[]
+            {
+            new RegexCompilationInfo("abcd", RegexOptions.None, "test1", "", false),
+            }, new AssemblyName("testregex"));
         }
     }
 }
