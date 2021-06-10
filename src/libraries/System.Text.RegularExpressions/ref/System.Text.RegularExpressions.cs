@@ -329,4 +329,10 @@ namespace System.Text.RegularExpressions
         protected RegexRunnerFactory() { }
         protected internal abstract System.Text.RegularExpressions.RegexRunner CreateInstance();
     }
+    [System.AttributeUsageAttribute(System.AttributeTargets.All, Inherited = false)]
+    public sealed partial class RegexSourceGeneratorAttribute : System.Attribute
+    {
+        public RegexSourceGeneratorAttribute(string pattern, System.Text.RegularExpressions.RegexOptions options) { }
+
+    }
 }
